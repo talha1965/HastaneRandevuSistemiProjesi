@@ -1,0 +1,156 @@
+using System;
+using System.Collections.Generic;
+
+namespace HastaTakipSistemi
+{
+    class Program
+    {
+        public class Hasta
+        {
+            public int HastaID { get; set; }
+            public string Ad { get; set; }
+            public int Yas { get; set; }
+            public string SaglikDurumu { get; set; }
+            public string Telefon { get; set; }
+            public string Eposta { get; set; }
+            public bool EngelliDurumu { get; set; }
+        }
+
+        public class Randevu
+        {
+            public int RandevuID { get; set; }
+            public int HastaID { get; set; }
+            public string DoktorAdi { get; set; }
+            public string Il { get; set; }
+            public string Ilce { get; set; }
+            public string Hastane { get; set; }
+            public string Klinik { get; set; }
+            public string MuayeneYeri { get; set; }
+            public DateTime Tarih { get; set; }
+        }
+
+        static List<Hasta> Hastalar = new List<Hasta>();
+        static List<Randevu> Randevular = new List<Randevu>();
+        static int HastaIDSayac = 1;
+        static int RandevuIDSayac = 1;
+
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                Console.WriteLine("\nDijital Hasta Takip ve Randevu Sistemi");
+                Console.WriteLine("1. Yeni Hasta Kaydı");
+                Console.WriteLine("2. Hasta Listesini Görüntüle");
+                Console.WriteLine("3. Randevu Oluştur");
+                Console.WriteLine("4. Randevuları Görüntüle");
+                Console.WriteLine("5. Çıkış");
+                Console.Write("Seçiminizi yapın: ");
+
+                string secim = Console.ReadLine();
+                if (secim == "1") HastaKaydet();
+                else if (secim == "2") HastaListesiGoruntule();
+                else if (secim == "3") RandevuOlustur();
+                else if (secim == "4") RandevulariGoruntule();
+                else if (secim == "5") return;
+                else Console.WriteLine("Geçersiz seçim. Tekrar deneyin.");
+            }
+        }
+
+        static void HastaKaydet()
+        {
+            Console.WriteLine("\n--- Yeni Hasta Kaydı ---");
+            Console.Write("Ad: ");
+            string ad = Console.ReadLine();
+            Console.Write("Yaş: ");
+            int yas = int.Parse(Console.ReadLine());
+            Console.Write("Sağlık Durumu: ");
+            string saglikDurumu = Console.ReadLine();
+            Console.Write("Telefon: ");
+            string telefon = Console.ReadLine();
+            Console.Write("E-posta: ");
+            string eposta = Console.ReadLine();
+            Console.Write("Engelli durumu var mı? (E/H): ");
+            bool engelliDurumu = Console.ReadLine().ToUpper() == "E";
+
+            Hastalar.Add(new Hasta
+            {
+                HastaID = HastaIDSayac++,
+                Ad = ad,
+                Yas = yas,
+                SaglikDurumu = saglikDurumu,
+                Telefon = telefon,
+                Eposta = eposta,
+                EngelliDurumu = engelliDurumu
+            });
+
+            Console.WriteLine("Hasta başarıyla kaydedildi!");
+        }
+
+        static void HastaListesiGoruntule()
+        {
+            Console.WriteLine("\n--- Hasta Listesi ---");
+            foreach (var hasta in Hastalar)
+            {
+                Console.WriteLine("ID: " + hasta.HastaID + ", Ad: " + hasta.Ad + ", Yaş: " + hasta.Yas + ", Sağlık Durumu: " + hasta.SaglikDurumu +
+                                  ", Telefon: " + hasta.Telefon + ", E-posta: " + hasta.Eposta + ", Engelli Durumu: " + (hasta.EngelliDurumu ? "Evet" : "Hayır"));
+            }
+        }
+
+        static void RandevuOlustur()
+        {
+            Console.WriteLine("\n--- Randevu Oluştur ---");
+            Console.Write("Hasta ID: ");
+            int hastaID = int.Parse(Console.ReadLine());
+            Console.Write("Doktor Adı: ");
+            string doktorAdi = Console.ReadLine();
+            Console.Write("İl: ");
+            string il = Console.ReadLine();
+            Console.Write("İlçe: ");
+            string ilce = Console.ReadLine();
+            Console.Write("Hastane: ");
+            string hastane = Console.ReadLine();
+            Console.Write("Klinik: ");
+            string klinik = Console.ReadLine();
+            Console.Write("Muayene Yeri: ");
+            string muayeneYeri = Console.ReadLine();
+            Console.Write("Randevu Tarihi (yyyy-MM-dd HH:mm): ");
+            DateTime tarih = DateTime.Parse(Console.ReadLine());
+
+            foreach (var randevu in Randevular)
+            {
+                if (randevu.DoktorAdi == doktorAdi && randevu.Tarih == tarih)
+                {
+                    Console.WriteLine("Hata: Aynı doktor için bu tarih ve saatte randevu zaten var.");
+                    return;
+                }
+            }
+
+            Randevular.Add(new Randevu
+            {
+                RandevuID = RandevuIDSayac++,
+                HastaID = hastaID,
+                DoktorAdi = doktorAdi,
+                Il = il,
+                Ilce = ilce,
+                Hastane = hastane,
+                Klinik = klinik,
+                MuayeneYeri = muayeneYeri,
+                Tarih = tarih
+            });
+
+            Console.WriteLine("Randevu başarıyla oluşturuldu!");
+        }
+
+        static void RandevulariGoruntule()
+        {
+            Console.WriteLine("\n--- Randevu Listesi ---");
+            foreach (var randevu in Randevular)
+            {
+                var hasta = Hastalar.Find(h => h.HastaID == randevu.HastaID);
+                Console.WriteLine("Randevu ID: " + randevu.RandevuID + ", Hasta: " + hasta.Ad + ", Doktor: " + randevu.DoktorAdi +
+                                  ", İl: " + randevu.Il + ", İlçe: " + randevu.Ilce + ", Hastane: " + randevu.Hastane +
+                                  ", Klinik: " + randevu.Klinik + ", Muayene Yeri: " + randevu.MuayeneYeri + ", Tarih: " + randevu.Tarih);
+            }
+        }
+    }
+}
