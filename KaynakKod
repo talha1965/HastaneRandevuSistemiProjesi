@@ -9,6 +9,7 @@ namespace HastaTakipSistemi
         {
             public int HastaID { get; set; }
             public string Ad { get; set; }
+            public string soyAd { get; set; }
             public int Yas { get; set; }
             public string SaglikDurumu { get; set; }
             public string Telefon { get; set; }
@@ -58,9 +59,11 @@ namespace HastaTakipSistemi
 
         static void HastaKaydet()
         {
-            Console.WriteLine("\n--- Yeni Hasta Kaydı ---");
+            Console.WriteLine("\nYeni Hasta Kaydı");
             Console.Write("Ad: ");
             string ad = Console.ReadLine();
+            Console.Write("SoyAd: ");
+            string soyAd= Console.ReadLine();
             Console.Write("Yaş: ");
             int yas = int.Parse(Console.ReadLine());
             Console.Write("Sağlık Durumu: ");
@@ -70,12 +73,13 @@ namespace HastaTakipSistemi
             Console.Write("E-posta: ");
             string eposta = Console.ReadLine();
             Console.Write("Engelli durumu var mı? (E/H): ");
-            bool engelliDurumu = Console.ReadLine().ToUpper() == "E";
+            bool engelliDurumu = Console.ReadLine() == "E";
 
             Hastalar.Add(new Hasta
             {
                 HastaID = HastaIDSayac++,
                 Ad = ad,
+                soyAd= soyAd,
                 Yas = yas,
                 SaglikDurumu = saglikDurumu,
                 Telefon = telefon,
@@ -83,22 +87,22 @@ namespace HastaTakipSistemi
                 EngelliDurumu = engelliDurumu
             });
 
-            Console.WriteLine("Hasta başarıyla kaydedildi!");
+            Console.WriteLine("Hasta kaydedildi");
         }
 
         static void HastaListesiGoruntule()
         {
-            Console.WriteLine("\n--- Hasta Listesi ---");
+            Console.WriteLine("\nHasta Listesi");
             foreach (var hasta in Hastalar)
             {
-                Console.WriteLine("ID: " + hasta.HastaID + ", Ad: " + hasta.Ad + ", Yaş: " + hasta.Yas + ", Sağlık Durumu: " + hasta.SaglikDurumu +
+                Console.WriteLine("ID: " + hasta.HastaID + ", Ad: " + hasta.Ad + ", Soyadı: " + hasta.soyAd + ", Yaş: " + hasta.Yas + ", Sağlık Durumu: " + hasta.SaglikDurumu +
                                   ", Telefon: " + hasta.Telefon + ", E-posta: " + hasta.Eposta + ", Engelli Durumu: " + (hasta.EngelliDurumu ? "Evet" : "Hayır"));
             }
         }
 
         static void RandevuOlustur()
         {
-            Console.WriteLine("\n--- Randevu Oluştur ---");
+            Console.WriteLine("\nRandevu Oluştur");
             Console.Write("Hasta ID: ");
             int hastaID = int.Parse(Console.ReadLine());
             Console.Write("Doktor Adı: ");
@@ -113,14 +117,14 @@ namespace HastaTakipSistemi
             string klinik = Console.ReadLine();
             Console.Write("Muayene Yeri: ");
             string muayeneYeri = Console.ReadLine();
-            Console.Write("Randevu Tarihi (yyyy-MM-dd HH:mm): ");
+            Console.Write("Randevu Tarihi (yıl ay gün saat) ");
             DateTime tarih = DateTime.Parse(Console.ReadLine());
 
             foreach (var randevu in Randevular)
             {
                 if (randevu.DoktorAdi == doktorAdi && randevu.Tarih == tarih)
                 {
-                    Console.WriteLine("Hata: Aynı doktor için bu tarih ve saatte randevu zaten var.");
+                    Console.WriteLine("Hata Aynı doktor için bu tarih ve saatte randevu var.");
                     return;
                 }
             }
@@ -138,16 +142,16 @@ namespace HastaTakipSistemi
                 Tarih = tarih
             });
 
-            Console.WriteLine("Randevu başarıyla oluşturuldu!");
+            Console.WriteLine("Randevu oluşturuldu");
         }
 
         static void RandevulariGoruntule()
         {
-            Console.WriteLine("\n--- Randevu Listesi ---");
+            Console.WriteLine("\nRandevu Listesi");
             foreach (var randevu in Randevular)
             {
                 var hasta = Hastalar.Find(h => h.HastaID == randevu.HastaID);
-                Console.WriteLine("Randevu ID: " + randevu.RandevuID + ", Hasta: " + hasta.Ad + ", Doktor: " + randevu.DoktorAdi +
+                Console.WriteLine("Randevu ID: " + randevu.RandevuID + ", Hasta: " + hasta.Ad +"Soyadı: "+ hasta.soyAd+ ", Doktor: " + randevu.DoktorAdi +
                                   ", İl: " + randevu.Il + ", İlçe: " + randevu.Ilce + ", Hastane: " + randevu.Hastane +
                                   ", Klinik: " + randevu.Klinik + ", Muayene Yeri: " + randevu.MuayeneYeri + ", Tarih: " + randevu.Tarih);
             }
