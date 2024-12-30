@@ -5,6 +5,7 @@ namespace HastaTakipSistemi
 {
     class Program
     {
+        // Hasta bilgilerini tutan sınıf
         public class Hasta
         {
             public int HastaID { get; set; }
@@ -17,6 +18,7 @@ namespace HastaTakipSistemi
             public bool EngelliDurumu { get; set; }
         }
 
+        // Randevu bilgilerini tutan sınıf
         public class Randevu
         {
             public int RandevuID { get; set; }
@@ -30,13 +32,17 @@ namespace HastaTakipSistemi
             public DateTime Tarih { get; set; }
         }
 
+        // Hasta ve randevu listelerini saklayan global değişkenler
         static List<Hasta> Hastalar = new List<Hasta>();
         static List<Randevu> Randevular = new List<Randevu>();
+
+        // ID sayaçları (otomatik ID üretimi için kullanılır)
         static int HastaIDSayac = 1;
         static int RandevuIDSayac = 1;
 
         static void Main(string[] args)
         {
+            // Ana menü döngüsü
             while (true)
             {
                 Console.WriteLine("\nDijital Hasta Takip ve Randevu Sistemi");
@@ -47,6 +53,7 @@ namespace HastaTakipSistemi
                 Console.WriteLine("5. Çıkış");
                 Console.Write("Seçiminizi yapın: ");
 
+                // Kullanıcıdan seçim alınır ve ilgili işlem çağrılır
                 string secim = Console.ReadLine();
                 if (secim == "1") HastaKaydet();
                 else if (secim == "2") HastaListesiGoruntule();
@@ -57,13 +64,14 @@ namespace HastaTakipSistemi
             }
         }
 
+        // Yeni hasta kaydı yapan metot
         static void HastaKaydet()
         {
             Console.WriteLine("\nYeni Hasta Kaydı");
             Console.Write("Ad: ");
             string ad = Console.ReadLine();
             Console.Write("SoyAd: ");
-            string soyAd= Console.ReadLine();
+            string soyAd = Console.ReadLine();
             Console.Write("Yaş: ");
             int yas = int.Parse(Console.ReadLine());
             Console.Write("Sağlık Durumu: ");
@@ -75,11 +83,12 @@ namespace HastaTakipSistemi
             Console.Write("Engelli durumu var mı? (E/H): ");
             bool engelliDurumu = Console.ReadLine() == "E";
 
+            // Yeni hasta bilgilerini listeye ekler
             Hastalar.Add(new Hasta
             {
                 HastaID = HastaIDSayac++,
                 Ad = ad,
-                soyAd= soyAd,
+                soyAd = soyAd,
                 Yas = yas,
                 SaglikDurumu = saglikDurumu,
                 Telefon = telefon,
@@ -90,6 +99,7 @@ namespace HastaTakipSistemi
             Console.WriteLine("Hasta kaydedildi");
         }
 
+        // Hasta listesini görüntüleyen metot
         static void HastaListesiGoruntule()
         {
             Console.WriteLine("\nHasta Listesi");
@@ -100,6 +110,7 @@ namespace HastaTakipSistemi
             }
         }
 
+        // Yeni randevu oluşturan metot
         static void RandevuOlustur()
         {
             Console.WriteLine("\nRandevu Oluştur");
@@ -117,9 +128,10 @@ namespace HastaTakipSistemi
             string klinik = Console.ReadLine();
             Console.Write("Muayene Yeri: ");
             string muayeneYeri = Console.ReadLine();
-            Console.Write("Randevu Tarihi (yıl ay gün saat) ");
+            Console.Write("Randevu Tarihi (yıl ay gün saat): ");
             DateTime tarih = DateTime.Parse(Console.ReadLine());
 
+            // Aynı doktor için aynı tarih ve saatte randevu varsa hata verir
             foreach (var randevu in Randevular)
             {
                 if (randevu.DoktorAdi == doktorAdi && randevu.Tarih == tarih)
@@ -129,6 +141,7 @@ namespace HastaTakipSistemi
                 }
             }
 
+            // Yeni randevu bilgilerini listeye ekler
             Randevular.Add(new Randevu
             {
                 RandevuID = RandevuIDSayac++,
@@ -145,13 +158,15 @@ namespace HastaTakipSistemi
             Console.WriteLine("Randevu oluşturuldu");
         }
 
+        // Randevu listesini görüntüleyen metot
         static void RandevulariGoruntule()
         {
             Console.WriteLine("\nRandevu Listesi");
             foreach (var randevu in Randevular)
             {
+                // Randevunun hasta bilgilerini bul ve listele
                 var hasta = Hastalar.Find(h => h.HastaID == randevu.HastaID);
-                Console.WriteLine("Randevu ID: " + randevu.RandevuID + ", Hasta: " + hasta.Ad +"Soyadı: "+ hasta.soyAd+ ", Doktor: " + randevu.DoktorAdi +
+                Console.WriteLine("Randevu ID: " + randevu.RandevuID + ", Hasta: " + hasta.Ad + " Soyadı: " + hasta.soyAd + ", Doktor: " + randevu.DoktorAdi +
                                   ", İl: " + randevu.Il + ", İlçe: " + randevu.Ilce + ", Hastane: " + randevu.Hastane +
                                   ", Klinik: " + randevu.Klinik + ", Muayene Yeri: " + randevu.MuayeneYeri + ", Tarih: " + randevu.Tarih);
             }
